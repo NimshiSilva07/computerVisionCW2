@@ -8,8 +8,21 @@ import numpy as np
 import io
 from PIL import Image
 
-# Load the best model
-model = tf.keras.models.load_model("emotion_cnn_model.h5", compile=False)
+# Load model with robust fallback: prefer SavedModel dir if present, else H5
+import os
+
+MODEL_DIR = "emotion_cnn_model_saved"
+MODEL_H5 = "emotion_cnn_model.h5"
+
+if os.path.isdir(MODEL_DIR):
+    model = tf.keras.models.load_model(MODEL_DIR, compile=False)
+else:
+    try:
+        model = tf.keras.models.load_model(MODEL_H5, compile=False)
+    except TypeError:
+        # Fallback for older H5 configs under tf.keras
+        from tensorflow.keras.saving import legacy_saved_model
+        model = tf.keras.models.load_model(MODEL_H5, compile=False)
 class_names = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 IMG_SIZE = (48, 48)
 
