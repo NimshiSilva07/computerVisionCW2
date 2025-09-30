@@ -9,7 +9,7 @@ import io
 from PIL import Image
 
 # Load the best model
-model = tf.keras.models.load_model("emotion_cnn_model.h5")
+model = tf.keras.models.load_model("emotion_cnn_model.h5", compile=False)
 class_names = ['angry', 'disgust', 'fear', 'happy', 'neutral', 'sad', 'surprise']
 IMG_SIZE = (48, 48)
 
